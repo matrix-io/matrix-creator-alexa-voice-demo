@@ -47,7 +47,6 @@ int main() {
   int16_t buffer[mics.Channels()][seconds_to_record * mics.SamplingRate()];
 
   uint32_t step = 0;
-
   while (true) {
     if (!digitalRead(16)) {
       usleep(10);
