@@ -99,7 +99,23 @@ def alexa():
 
 
 def start():
-    print "Touch MATRIX Creator IR Sensor"
+   sphinx = "/home/pi/matrix-malos-wakeword/build/src/psphix_wakeword"
+   params = "-keyphrase \"alexa\" -kws_threshold 1e-8 -inmic yes -adcdev"
+   channel = "mic_channel8"
+
+   cmd = sphinx + " " + params + " " + channel
+
+   print cmd
+
+   sphinx_process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+
+   with open("/tmp/sphinx_words") as fifo:
+     while True:
+        print "ALEXA!!!!"
+        #capture_audio()
+        #alexa()
+
+def capture_audio():
     process = subprocess.Popen(
         ['./micarray/build/micarray_dump'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     audio, err = process.communicate()
@@ -107,13 +123,10 @@ def start():
     rf = open(path + 'recording.wav', 'w')
     rf.write(audio)
     rf.close()
-    alexa()
 
 
 if __name__ == "__main__":
     print "This is a MATRIX Creator demo - not ready for production"
-    print "Running workaround for GPIO 16 (IR-RX) "
-    subprocess.Popen(['sudo', 'rmmod', 'lirc_rpi'])
 
     while internet_on() == False:
         print "."
@@ -121,5 +134,4 @@ if __name__ == "__main__":
     os.system('mpg123 -q {}1sec.mp3 {}hello.mp3'.format(path +
                                                         "/assets/", path + "/assets/"))
     while True:
-        subprocess.Popen(['gpio','edge','16','both'])
         start()

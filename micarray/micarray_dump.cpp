@@ -3,8 +3,6 @@
  * All rights reserved.
  */
 
-#include <wiringPi.h>
-
 #include <string>
 #include <iostream>
 #include <valarray>
@@ -15,8 +13,6 @@
 #include <matrix_hal/microphone_array.h>
 #include <matrix_hal/wishbone_bus.h>
 
-#define kIRRxPin 16
-
 namespace hal = matrix_hal;
 
 int main() {
@@ -26,12 +22,6 @@ int main() {
   hal::MicrophoneArray mics;
   mics.Setup(bus);
 
-  pinMode(kIRRxPin, INPUT);
-  pinMode(13, OUTPUT);
-  pinMode(5, OUTPUT);
-
-  digitalWrite(13, HIGH);
-  digitalWrite(5, HIGH);
 
   hal::Everloop everloop;
   everloop.Setup(bus);
@@ -47,12 +37,6 @@ int main() {
   int16_t buffer[mics.Channels()][seconds_to_record * mics.SamplingRate()];
 
   uint32_t step = 0;
-  while (true) {
-    if (!digitalRead(16)) {
-      usleep(10);
-      if (!digitalRead(16)) break;
-    }
-  }
 
   for (auto& led : image1d.leds) {
     led.blue = 0;
@@ -84,7 +68,5 @@ int main() {
   }
   everloop.Write(&image1d);
   // }
-  digitalWrite(13, LOW);
-  digitalWrite(5, LOW);
   return 0;
 }
