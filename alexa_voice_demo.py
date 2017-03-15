@@ -151,7 +151,7 @@ def capture_audio():
     inp.setchannels(1)
     inp.setrate(16000)
     inp.setformat(alsaaudio.PCM_FORMAT_S16_LE)
-    inp.setperiodsize(512)
+    inp.setperiodsize(128)
 
     loops=185
 
