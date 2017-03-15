@@ -130,28 +130,31 @@ def start():
    setEverloopColor(0,0,0,10)
    cmd = "/home/pi/matrix-creator-alexa-voice-demo/wakeword/wake_word"
 
-   sphinx_process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+   subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
    time.sleep(1)
-   with open("/tmp/wakeword_pipe") as fifo:
-     while True:
-        print "ALEXA!!!!"
 
-        setEverloopColor(10,0,0,0)
-        capture_audio()
+   fifo = open("/tmp/wakeword_pipe")
+
+   while True:
+     if "alexa" in fifo.readline():
+       print "ALEXA!!!!"
+
+       setEverloopColor(10,0,0,0)
+       capture_audio()
         
-        setEverloopColor(0,0,10,0)
-        alexa()
+       setEverloopColor(0,0,10,0)
+       alexa()
 
-        setEverloopColor(0,0,0,10)
+       setEverloopColor(0,0,0,10)
 
 
 def capture_audio():
-    inp = alsaaudio.PCM(alsaaudio.PCM_CAPTURE,alsaaudio.PCM_NONBLOCK)
+    inp = alsaaudio.PCM(alsaaudio.PCM_CAPTURE,alsaaudio.PCM_NORMAL)
 
     inp.setchannels(1)
     inp.setrate(16000)
     inp.setformat(alsaaudio.PCM_FORMAT_S16_LE)
-    inp.setperiodsize(128)
+    inp.setperiodsize(512)
 
     loops=185
 
@@ -159,7 +162,6 @@ def capture_audio():
     while loops > 0:
       loops -= 1
       l, data = inp.read()
-      print "l=%d" % l 
       if l:
         rf.write(data)
 
