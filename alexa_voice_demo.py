@@ -10,13 +10,40 @@ import json
 import time
 import re
 import subprocess
+import alsaaudio, time, audioop
 from memcache import Client
 
+import zmq
+import time
+import driver_pb2 as driver_proto
+
 # Setup
+
+creator_ip = '127.0.0.1' # or local ip of MATRIX creator
+creator_everloop_base_port = 20013 + 8
+
+context = zmq.Context()
+socket = context.socket(zmq.PUSH)
+socket.connect('tcp://' + creator_ip + ':' + str(creator_everloop_base_port))
+
 recorded = False
 servers = ["127.0.0.1:11211"]
 mc = Client(servers, debug=1)
 path = os.path.realpath(__file__).rstrip(os.path.basename(__file__))
+
+def setEverloopColor(red=0, green=0, blue=0, white=0):
+    config = driver_proto.DriverConfig()
+    image = []
+    for led in range (35):
+        ledValue = driver_proto.LedValue()
+        ledValue.blue = blue
+        ledValue.red = red
+        ledValue.green = green
+        ledValue.white = white
+        image.append(ledValue)
+
+    config.image.led.extend(image) 
+    socket.send(config.SerializeToString())
 
 
 def internet_on():
@@ -74,7 +101,7 @@ def alexa():
             "format": "audio/L16; rate=16000; channels=1"
         }
     }
-    with open(path + 'recording.wav') as inf:
+    with open(path + 'recording.raw') as inf:
         files = [  # a list
             ('file', ('request', json.dumps(d), 'application/json; charset=UTF-8')),
             ('file', ('audio', inf, 'audio/L16; rate=16000; channels=1'))
@@ -100,28 +127,43 @@ def alexa():
 
 
 def start():
+   setEverloopColor(0,0,0,10)
    cmd = "/home/pi/matrix-creator-alexa-voice-demo/wakeword/wake_word"
-
-   print cmd
 
    sphinx_process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
    time.sleep(1)
    with open("/tmp/wakeword_pipe") as fifo:
      while True:
         print "ALEXA!!!!"
+
+        setEverloopColor(10,0,0,0)
         capture_audio()
+        
+        setEverloopColor(0,0,10,0)
         alexa()
 
+        setEverloopColor(0,0,0,10)
+
+
 def capture_audio():
+    inp = alsaaudio.PCM(alsaaudio.PCM_CAPTURE,alsaaudio.PCM_NONBLOCK)
 
-    process = subprocess.Popen(
-        ['/home/pi/matrix-creator-alexa-voice-demo/dump.sh'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    audio, err = process.communicate()
+    inp.setchannels(1)
+    inp.setrate(16000)
+    inp.setformat(alsaaudio.PCM_FORMAT_S16_LE)
+    inp.setperiodsize(512)
 
-    rf = open(path + 'recording.wav', 'w')
-    rf.write(audio)
+    loops=185
+
+    rf = open(path + 'recording.raw', 'w')
+    while loops > 0:
+      loops -= 1
+      l, data = inp.read()
+      print "l=%d" % l 
+      if l:
+        rf.write(data)
+
     rf.close()
-
 
 
 if __name__ == "__main__":
