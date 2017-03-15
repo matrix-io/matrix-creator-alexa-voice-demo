@@ -10,3 +10,10 @@ set_property(TARGET micarray_dump PROPERTY CXX_STANDARD 11)
 target_link_libraries(micarray_dump matrix_creator_hal)
 target_link_libraries(micarray_dump ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(micarray_dump wiringPi)
+
+
+add_executable(off off.cpp)
+set_property(TARGET off PROPERTY CXX_STANDARD 11)
+target_link_libraries(off matrix_creator_hal)
+target_link_libraries(off ${CMAKE_THREAD_LIBS_INIT})
+

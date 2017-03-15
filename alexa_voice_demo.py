@@ -7,6 +7,7 @@ import random
 from creds import *
 import requests
 import json
+import time
 import re
 import subprocess
 from memcache import Client
@@ -99,30 +100,28 @@ def alexa():
 
 
 def start():
-   sphinx = "/home/pi/matrix-malos-wakeword/build/src/psphix_wakeword"
-   params = "-keyphrase \"alexa\" -kws_threshold 1e-8 -inmic yes -adcdev"
-   channel = "mic_channel8"
-
-   cmd = sphinx + " " + params + " " + channel
+   cmd = "/home/pi/matrix-creator-alexa-voice-demo/wakeword/wake_word"
 
    print cmd
 
    sphinx_process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
-
-   with open("/tmp/sphinx_words") as fifo:
+   time.sleep(1)
+   with open("/tmp/wakeword_pipe") as fifo:
      while True:
         print "ALEXA!!!!"
-        #capture_audio()
-        #alexa()
+        capture_audio()
+        alexa()
 
 def capture_audio():
+
     process = subprocess.Popen(
-        ['./micarray/build/micarray_dump'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        ['/home/pi/matrix-creator-alexa-voice-demo/dump.sh'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     audio, err = process.communicate()
 
     rf = open(path + 'recording.wav', 'w')
     rf.write(audio)
     rf.close()
+
 
 
 if __name__ == "__main__":
