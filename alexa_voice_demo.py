@@ -160,7 +160,7 @@ def capture_audio():
     inp.setperiodsize(512)
 
     loops=290
-    silence_counter = 60
+    silence_counter = 80
     silence_thershold = 2500
     rf = open(path + 'recording.raw', 'w')
     while loops > 0:
@@ -173,7 +173,7 @@ def capture_audio():
           print "Silence detected "
           break
       else:
-        silence_counter=40
+        silence_counter=60
       if l:
         rf.write(data)
 
