@@ -138,6 +138,8 @@ def start():
    while True:
      if "alexa" in fifo.readline():
        print "ALEXA!!!!"
+       
+       os.system('mpg123 -q {}start.mp3'.format(path))
 
        setEverloopColor(10,0,0,0)
        capture_audio()
@@ -157,11 +159,20 @@ def capture_audio():
     inp.setperiodsize(512)
 
     loops=185
-
+    silence_counter = 40
+    silence_thershold = 2500
     rf = open(path + 'recording.raw', 'w')
     while loops > 0:
       loops -= 1
       l, data = inp.read()
+      print audioop.max(data,2)
+      if audioop.max(data,2) < silence_thershold:
+        silence_counter -= 1
+        if silence_counter == 0:
+          print "Silence detected "
+          break
+      else:
+        silence_counter=30
       if l:
         rf.write(data)
 
