@@ -1,3 +1,6 @@
 [submodule "protocol-buffers"]
 	path = protocol-buffers
 	url = https://github.com/matrix-io/protocol-buffers.git
+[submodule "third_party/alexa-rpi"]
+	path = third_party/alexa-rpi
+	url = https://github.com/Sensory/alexa-rpi.git
