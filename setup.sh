@@ -11,7 +11,7 @@ cp rc/asoundrc ${HOME}/.asoundrc
 
 
 # sensory
-git submodule update
+git submodule init
 git submodule update
 
 third_party/alexa-rpi/bin/license.sh
