@@ -15,16 +15,17 @@ from memcache import Client
 
 import zmq
 import time
-import driver_pb2 as driver_proto
+from matrix_io.proto.malos.v1 import driver_pb2
+from matrix_io.proto.malos.v1 import io_pb2
 
 # Setup
+creator_ip = os.environ.get('CREATOR_IP', '127.0.0.1')
 
-creator_ip = '127.0.0.1' # or local ip of MATRIX creator
 creator_everloop_base_port = 20013 + 8
 
 context = zmq.Context()
-socket = context.socket(zmq.PUSH)
-socket.connect('tcp://' + creator_ip + ':' + str(creator_everloop_base_port))
+config_socket = context.socket(zmq.PUSH)
+config_socket.connect('tcp://{0}:{1}'.format(creator_ip, creator_everloop_base_port))
 
 recorded = False
 servers = ["127.0.0.1:11211"]
@@ -32,10 +33,10 @@ mc = Client(servers, debug=1)
 path = os.path.realpath(__file__).rstrip(os.path.basename(__file__))
 
 def setEverloopColor(red=0, green=0, blue=0, white=0):
-    config = driver_proto.DriverConfig()
+    config = driver_pb2.DriverConfig()
     image = []
     for led in range (35):
-        ledValue = driver_proto.LedValue()
+        ledValue = io_pb2.LedValue()
         ledValue.blue = blue
         ledValue.red = red
         ledValue.green = green
@@ -43,7 +44,7 @@ def setEverloopColor(red=0, green=0, blue=0, white=0):
         image.append(ledValue)
 
     config.image.led.extend(image) 
-    socket.send(config.SerializeToString())
+    config_socket.send(config.SerializeToString())
 
 
 def internet_on():
@@ -128,7 +129,7 @@ def alexa():
 
 def start():
    setEverloopColor(0,0,0,10)
-   cmd = "/home/pi/matrix-creator-alexa-voice-demo/wakeword/wake_word"
+   cmd = "./wakeword/wake_word"
 
    subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
    time.sleep(1)
