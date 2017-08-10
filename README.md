@@ -1,5 +1,5 @@
 
-### Alexa Running on MATRIX Creator/Voice + Raspberry Pi 3 (Using Python, unofficial demo) ###
+### Alexa Running on MATRIX Creator/Voice + Raspberry Pi 3 (Using Python) ###
 
  [![Amazon's Alexa with MATRIX Creator + Raspberry
 ](http://img.youtube.com/vi/8iUDyo5sQJI/0.jpg)](https://www.youtube.com/watch?v=8iUDyo5sQJI)
