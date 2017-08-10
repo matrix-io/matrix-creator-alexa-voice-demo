@@ -4,7 +4,7 @@
  [![Amazon's Alexa with MATRIX Creator + Raspberry
 ](http://img.youtube.com/vi/8iUDyo5sQJI/0.jpg)](https://www.youtube.com/watch?v=8iUDyo5sQJI)
 
-### MATRIX Creator software
+### MATRIX MALOS service
 
 install MALOS and perform device reboot. For more details: [Getting Started Guide](https://github.com/matrix-io/matrix-creator-quickstart/wiki/2.-Getting-Started)
 
