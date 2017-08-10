@@ -1,5 +1,5 @@
 
-### Alexa Running on MATRIX Creator/Voice + Raspberry Pi 3###
+### Alexa Running on MATRIX Creator/Voice + Raspberry Pi 3 (Using Python, unofficial demo) ###
 
  [![Amazon's Alexa with MATRIX Creator + Raspberry
 ](http://img.youtube.com/vi/8iUDyo5sQJI/0.jpg)](https://www.youtube.com/watch?v=8iUDyo5sQJI)
@@ -15,6 +15,19 @@ sudo apt-get upgrade
 sudo apt-get install matrix-creator-init matrix-creator-malos cmake g++ git libzmq3-dev --no-install-recommends
 reboot
 
+```
+
+### Cloning Alexa Voice demo for MATRIX Creator and MATRIX Voice
+```
+git clone https://github.com/matrix-io/matrix-creator-alexa-voice-demo.git
+```
+
+### Setup
+
+Please say *yes* to all. 
+```
+cd matrix-creator-alexa-voice-demo
+./setup.sh
 ```
 
 This project was based in https://github.com/novaspirit/AlexaPi
